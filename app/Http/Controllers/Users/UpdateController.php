@@ -14,8 +14,6 @@ class UpdateController extends Controller
         $user = User::find($id);
         $user->update($validatedData);
 
-        return  response()->json($user);
-
-        //return redirect()->back()->with('errors', [])->with('success', 'Заказ изменен');
+        return  response()->json(['user' => $user, 'result' => 'success']);
     }
 }

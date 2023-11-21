@@ -17,7 +17,6 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        //dd(123);
 
         if (Auth::check()) {
             if (Auth::user()->hasRole('admin')) {
@@ -28,12 +27,6 @@ class AdminMiddleware
         } else {
             return response(['error' => 'Unauthorized'], 401);
         }
-        /*if ($request->user() && $request->user()->hasRole('admin')) {
-            return $next($request);
-        }
-        return Redirect::to('/login');
-        return redirect()->route('login');*/
-
 
     }
 }

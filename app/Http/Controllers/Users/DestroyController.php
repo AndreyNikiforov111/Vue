@@ -10,11 +10,10 @@ use Illuminate\Support\Facades\Redirect;
 class DestroyController extends Controller
 {
     public function __invoke($id){
+        //Удалить пользователя
         $User = User::find($id);
-        //dd($password);
         $User->delete();
         return  response()->json($User);
-        //dd($User);
-        //return Redirect::to('users');
+
     }
 }

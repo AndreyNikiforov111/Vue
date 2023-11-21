@@ -80,11 +80,15 @@ export default {
             })
             .catch(error => {
                 console.error('An error occurred:', error);
+                if(error.response.status === 401){
+                    this.$router.push('/login');
+                }
+                console.error('An error occurred:', error);
+                return Promise.reject(error);
             });
     },
     methods: {
         deletePost(id) {
-            //console.log(id);
             axios.delete(`/api/passwords/${id}`)
                 .then(response => {
                     window.location.reload();
@@ -102,7 +106,7 @@ export default {
             }
             this.items = items
         },
-        // редактировать через парорли может только user
+        // редактировать через пароли может только user
         isRoleUser(id){
             if (id === this.isUser){
                 return true
@@ -111,7 +115,7 @@ export default {
         },
         //редактировать пароли и менять к нм доступы может только создавший их user
         isRole(id){
-            console.log(this.isUser);
+
             if (this.isUser === true){
                 return true
             }
@@ -121,11 +125,11 @@ export default {
             return false
         },
         applyFilters(){
-            console.log([
+            /*console.log([
                 this.title,
                 this.username,
                 this.folder_id,
-                this.user_id])
+                this.user_id])*/
 
         this.$router.push({
             path: '/passwords',

@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Redirect;
 class UpdateController extends Controller
 {
     public function __invoke(PasswordRequest $request, $id){
+        // Редактирование пароля
         $validatedData = $request->validated();
         $password = Password::find($id);
         $password->update($validatedData);
-        return  response()->json($password);
-        //return redirect()->back()->with('errors', [])->with('success', 'Заказ изменен');
+        return  response()->json(['pasword' => $password, 'result' => 'success']);
     }
 }

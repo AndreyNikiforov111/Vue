@@ -26,7 +26,7 @@ class PasswordRequest extends FormRequest
             'title' => 'required|max:255',
             'password' => 'required|max:255',
             'project' => 'max:255',
-            "folder_id" => '',    //
+            "folder_id" => 'required',    //
             "user_id" => ''       //
         ];
     }

@@ -9,10 +9,7 @@ use Illuminate\Http\Request;
 class CreateController extends Controller
 {
     public function __invoke(){
-        //создание заказа
-        //$user = User::all();
-        //$user = User::all();
+        //создание папки
         return response()->json();
-        //return View('Folders.create');
     }
 }

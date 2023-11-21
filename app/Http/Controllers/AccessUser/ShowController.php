@@ -13,20 +13,19 @@ class ShowController extends Controller
 {
     public function __invoke($id)
     {
-        //отправляем на фронт таблицы пользователя чиь доступы редактируются
+        // от USER отправляем на фронт таблицы Пароля доступы к которому мы редактируем
         $userId = User::find( Auth::id() );
         $passwordId = Password::find($id);
         $user = User::where('role', 'user')->where('id','!=',  Auth::id())->get();
 
-
         $passwordAccess = User_password_access::with('password', 'user')->get();
-        //dd($passwordAccess);
-        //dd($access);
+
         return  response()->json([
             'user' => $user,
             'passwordAccess' => $passwordAccess,
             'passwordId' => $passwordId,
-            'userId' => $userId ]);
+            'userId' => $userId
+        ]);
 
     }
 }

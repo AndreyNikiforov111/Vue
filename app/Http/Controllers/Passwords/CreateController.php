@@ -12,10 +12,8 @@ use mysql_xdevapi\Result;
 class CreateController extends Controller
 {
     public function __invoke(){
-
-        //$user = User::all();
+        // Создаем пароль
         $folder = Folder::all();
         return  response()->json(['folder' => $folder]);
-        //return View('Passwords.create')->with('folder', $folder);
     }
 }

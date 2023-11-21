@@ -9,9 +9,7 @@ class CreateController extends Controller
 {
     public function __invoke(){
 
-        //$user = User::all();
-        //$folder = Folder::all();
         return response()->json();
-        //return View('Users.create');
+
     }
 }

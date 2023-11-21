@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Redirect;
 class DestroyController extends Controller
 {
     public function __invoke($id){
+        //удаляем пароль
         $password = Password::find($id);
-        //dd($password);
         $password->delete();
         return  response()->json();
-        //return Redirect::to('passwords');
+
     }
 }

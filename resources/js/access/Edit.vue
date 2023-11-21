@@ -91,6 +91,11 @@ export default {
             })
             .catch(error => {
                 console.error('An error occurred:', error);
+                if(error.response.status === 401){
+                    this.$router.push('/login');
+                }
+                console.error('An error occurred:', error);
+                return Promise.reject(error);
             });
     },
     methods: {

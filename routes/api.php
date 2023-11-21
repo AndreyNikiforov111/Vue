@@ -31,8 +31,11 @@ Route::group(['prefix' => 'passwords'], function () {
     Route::match(['get' , 'post'],'/', IndexController::class);
     Route::middleware('admin')->get('/create', CreateController::class);
     Route::middleware('admin')->post('/', StoreController::class);
+    // user может редактировать пароли кот он сам создал
     Route::get('/{id}',ShowController::class);
     Route::put('/{id}',UpdateController::class);
+    Route::delete('/{id}',DestroyController::class);
+    // только user может редактировать доступ к парлям кот он сам создал
     Route::get('/{id}/access',\App\Http\Controllers\AccessUser\ShowController::class);
     Route::put('/{id}/access',\App\Http\Controllers\AccessUser\UpdateController::class);
 });
@@ -42,16 +45,19 @@ Route::group(['prefix' => 'folders'], function (){
     Route::post('/', App\Http\Controllers\Folders\StoreController::class);
 });
 
-Route::group(['prefix' => 'users'], function (){
-    Route::get('/', App\Http\Controllers\Users\IndexController::class);
-    Route::middleware('admin')->get('/create', App\Http\Controllers\Users\CreateController::class);
-    Route::middleware('admin')->post('/', App\Http\Controllers\Users\StoreController::class);
-    Route::middleware('admin')->get('/{id}', App\Http\Controllers\Users\ShowController::class);
-    Route::middleware('admin')->put('/{id}', App\Http\Controllers\Users\UpdateController::class);
-    Route::middleware('admin')->delete('/{id}',\App\Http\Controllers\Users\DestroyController::class);
-    Route::get('/{id}/access',\App\Http\Controllers\Access\ShowController::class);
-    Route::put('/{id}/access',\App\Http\Controllers\Access\UpdateController::class);
-});
+    Route::group(['prefix' => 'users'], function (){
+        Route::get('/', App\Http\Controllers\Users\IndexController::class);
+        Route::group(['middleware' => 'admin'], function () {
+            Route::middleware('admin')->get('/create', App\Http\Controllers\Users\CreateController::class);
+            Route::middleware('admin')->post('/', App\Http\Controllers\Users\StoreController::class);
+            Route::middleware('admin')->get('/{id}', App\Http\Controllers\Users\ShowController::class);
+            Route::middleware('admin')->put('/{id}', App\Http\Controllers\Users\UpdateController::class);
+            Route::middleware('admin')->delete('/{id}',\App\Http\Controllers\Users\DestroyController::class);
+            // Admin может брать любого пользователя и менять ему доступы к контенту
+            Route::middleware('admin')->get('/{id}/access',\App\Http\Controllers\Access\ShowController::class);
+            Route::middleware('admin')->put('/{id}/access',\App\Http\Controllers\Access\UpdateController::class);
+        });
+    });
 });
 
 

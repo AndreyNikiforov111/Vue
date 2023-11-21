@@ -5,15 +5,17 @@
     </div>
     <form @submit.prevent="submitForm" method="POST">
         <div class="">Введите имя пароля</div>
-        <input type="text" name="username" v-model="password.username" style="margin-bottom: 10px;">
+        <input type="text" name="username" v-model="password.username" class="input">
 
         <div class="">Введите имя заголовок</div>
-        <input type="text" name="title" v-model="password.title" style="margin-bottom: 10px;">
+        <input type="text" name="title" v-model="password.title" class="input">
 
         <div class="">Пароль</div>
-        <input type="text" name="password" v-model="password.password"  style="margin-bottom: 10px;">
+        <input type="text" name="password" v-model="password.password"  class="input">
+        <button @click.prevent="generatePassword">Сгенерировать пароль</button>
+
         <div class="">Проект</div>
-        <input type="text" name="project" v-model="password.project"  style="margin-bottom: 10px;">
+        <input type="text" name="project" v-model="password.project"  class="input">
 
         <div class="form-group">
             <div class="">Папка к которой относится пароль</div>
@@ -28,9 +30,16 @@
 
             </select>
         </div>
+        <div v-if="errors" style="background: #ba7979">
+            <ul>
+                <li v-for="error in errors" :key="error">{{ error }}</li>
+            </ul>
+        </div>
         <button type="submit">Создать</button>
 
     </form>
+
+
 </template>
 
 <script>
@@ -41,7 +50,8 @@ export default {
         return {
             items: [],
             password:{},
-            result: ''
+            result: '',
+            errors: null
         };
     },
     created() {
@@ -51,21 +61,40 @@ export default {
             })
             .catch(error => {
                 console.error('An error occurred:', error);
+                if(error.response.status === 401){
+                    this.$router.push('/login');
+                }
+                console.error('An error occurred:', error);
+                return Promise.reject(error);
             });
 
     },
     methods: {
         submitForm() {
-            console.log(this.password);
             axios.post('/api/passwords',  this.password )
                 .then(response => {
                     this.result = response.data.result
                     console.log('Password updated successfully', response.data);
                })
                 .catch(error => {
+                    if (error.response.status === 422) {
+                        // Если получен статус 422 (неправильные данные), обрабатываем ошибки валидации из Laravel
+                        this.errors = Object.values(error.response.data.errors).flat();
+                    }
                     console.error('An error occurred:', error);
                 });
+        },
+        generatePassword() {
+            const length = 8; // Длина генерируемого пароля
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Набор символов для генерации пароля
+            let password = "";
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
+            }
+            this.password.password = password; // Установка сгенерированного пароля в переменную данных
         }
+
     }
 }
 </script>

@@ -17,11 +17,10 @@ class StoreController extends Controller
 
         //проверка на ошибки
         $validatedData = $request->validated();
-        //dd($request['username']);
-        $name = $request['name'];
-        $email = $request['email'];
-        $password = $request['password'];
-        $role = $request['role'];
+        $name = $validatedData['name'];
+        $email = $validatedData['email'];
+        $password = $validatedData['password'];
+        $role = $validatedData['role'];
         $user = User::create([
             'name' => $name,
             'email' => $email,
@@ -31,6 +30,5 @@ class StoreController extends Controller
         ]);
 
         return  response()->json(['result' =>'success']);
-        //return redirect()->back()->with('errors', [])->with('success',  'Пользователь создан')->withInput();
     }
 }

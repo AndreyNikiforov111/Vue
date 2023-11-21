@@ -18,15 +18,11 @@ class StoreController extends Controller
             DB::beginTransaction();
         //проверка на ошибки
         $validatedData = $request->validated();
-        //dd($request);
         $username = $validatedData['username'];
         $title = $validatedData['title'];
         $password = $validatedData['password'];
         $project = $validatedData['project'];
         $folder_id = $validatedData['folder_id'];
-        //$user_id = $request['user_id'];
-        //dd($folder_id);
-        //dd(Auth::user());
         $password = Password::create([
             'username' => $username,
             'title' => $title,
@@ -36,25 +32,19 @@ class StoreController extends Controller
             'user_id' =>  Auth::id(),
 
         ]);
-        if (Auth::check()) {
+        // Если пользователь User создаем для него доступы к этому паролю
             if (Auth::user()->hasRole('user')) {
                 User_password_access::create([
                    'password_id' => $password->id,
                     'user_id' => Auth::id()
                 ]);
             }
-        }
+
             DB::commit();
         }catch (\Exception $exception ){
             DB::rollBack();
             return $exception->getMessage();
         }
-        //dd($password);
-        //если редирект произошел ранише в резулте придет обьект с ошибкой
-        /*if (gettype($result) === "object"){
-            return  redirect()->back();
-        }*/
         return  response()->json(['result' => 'success']);
-        //return redirect()->back()->with('errors', [])->with('success',  'Ваш заказ создан')->withInput();
     }
 }
